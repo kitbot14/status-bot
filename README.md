@@ -1,1 +1,1 @@
-se bot a ete cree par moi vous le retrouvere ici https://discord.gg/rV56PQXSdF c un bot pour aficher le status de autre bot si il et off ou on ![image](https://github.com/user-attachments/assets/89c643d3-0e1d-4d80-a395-c909f398f2e9)
+se bot a ete cree par moi vous le retrouvere ici https://discord.gg/rV56PQXSdF c un bot pour aficher le status de autre bot si il et off ou on ![image](https://github.com/user-attachments/assets/394288dc-4bf6-4531-926c-2a6d40f333b4)
