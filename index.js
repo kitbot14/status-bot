@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const fs = require('fs');
 const ready = require('./ready'); // Importer le module ready.js
 
@@ -31,6 +31,7 @@ const emojis = {
   offline: '<:OFF:1276254076698361896>',
   notFound: '<:NONTROUVER:1276254113134547107>'
 };
+
 // Charger le module ready.js
 ready(client);
 
@@ -52,42 +53,42 @@ client.once('ready', () => {
 
       const members = await guild.members.fetch();
 
-      // Créer les embeds pour chaque bot
-      const embeds = bots.map(bot => {
+      // Créer la description combinée pour tous les bots
+      let description = '';
+
+      bots.forEach(bot => {
         const botMember = members.get(bot.id);
-        let statusEmbed;
+        const status = botMember ? (botMember.presence ? botMember.presence.status : 'offline') : 'offline';
 
-        if (botMember) {
-          const status = botMember.presence ? botMember.presence.status : 'offline';
-          statusEmbed = new EmbedBuilder()
-            .setTitle(`Statut de ${bot.name}`)
-            .addFields(
-              { name: 'Nom du Bot', value: bot.name },
-              { name: 'ID du Bot', value: bot.id },
-              { name: 'Statut', value: status === 'online' ? `${emojis.online} En ligne` : `${emojis.offline} Hors ligne` },
-              { name: 'Dernière mise à jour', value: getDiscordTimestamp() } // Met à jour le timestamp
-            )
-            .setColor(status === 'online' ? 'Green' : 'Red');
-        } else {
-          statusEmbed = new EmbedBuilder()
-            .setTitle(`Statut de ${bot.name}`)
-            .addFields(
-              { name: 'Nom du Bot', value: bot.name },
-              { name: 'ID du Bot', value: bot.id },
-              { name: 'Statut', value: `${emojis.notFound} Bot non trouvé sur ce serveur` },
-              { name: 'Dernière mise à jour', value: getDiscordTimestamp() } // Met à jour le timestamp
-            )
-            .setColor('Yellow');
-        }
-
-        return statusEmbed;
+        description += `**Nom du Bot**: ${bot.name}\n`;
+        description += `**ID du Bot**: ${bot.id}\n`;
+        description += `**Statut**: ${status === 'online' ? `${emojis.online} En ligne` : `${emojis.offline} Hors ligne`}\n`;
+        description += '\n';
       });
+
+      // Créer l'embed avec tous les statuts
+      const statusEmbed = new EmbedBuilder()
+        .setTitle('Statut des Bots')
+        .setDescription(description)
+        .addFields(
+          { name: 'Dernière mise à jour', value: getDiscordTimestamp() } // Met à jour le timestamp
+        )
+        .setColor('Blue'); // Choisis une couleur qui te convient
+
+      // Créer un bouton avec un lien
+      const button = new ButtonBuilder()
+        .setLabel('My Code Here')
+        .setStyle(ButtonStyle.Link)
+        .setURL('https://github.com/kitbot14/status-bot');
+
+      // Créer une ligne d'action pour le bouton
+      const row = new ActionRowBuilder().addComponents(button);
 
       // Mettre à jour ou envoyer le message
       if (statusMessage) {
-        await statusMessage.edit({ embeds });
+        await statusMessage.edit({ embeds: [statusEmbed], components: [row] });
       } else {
-        statusMessage = await channel.send({ embeds });
+        statusMessage = await channel.send({ embeds: [statusEmbed], components: [row] });
       }
     } catch (error) {
       console.error('Erreur lors de la vérification du statut des bots:', error);
