@@ -1,6 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const fs = require('fs');
-const ready = require('./ready'); // Importer le module ready.js
+const axios = require('axios');
+const ready = require('./ready.js'); // Importer le module ready.js
 
 // Lire les configurations depuis config.json
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
@@ -9,7 +10,8 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildMembers
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.MessageContent, // Nécessaire pour lire les messages du salon
   ]
 });
 
@@ -17,12 +19,21 @@ const bots = config.bots; // Liste des bots avec leurs IDs et noms
 const channelId = config.channelId;
 const guildId = config.guildId;
 const token = config.token;
+const websites = config.websites; // Liste des sites avec noms et URLs
 
 let statusMessage;
+const botStartTime = Date.now(); // Temps de démarrage du bot
 
 // Fonction pour générer le format de timestamp Discord
 function getDiscordTimestamp() {
   return `<t:${Math.floor(Date.now() / 1000)}:R>`; // Timestamp Unix actuel
+}
+
+// Fonction pour calculer le temps écoulé depuis le démarrage en secondes
+function getUptimeTimestamp() {
+  const uptimeMs = Date.now() - botStartTime;
+  const uptimeSeconds = Math.floor(uptimeMs / 1000);
+  return `<t:${Math.floor(Date.now() / 1000) - uptimeSeconds}:R>`; // Format de timestamp Discord
 }
 
 // Emoji pour les différents états
@@ -42,8 +53,8 @@ client.once('ready', () => {
     return;
   }
 
-  // Fonction pour vérifier le statut des bots et mettre à jour le message
-  async function checkBotsStatus() {
+  // Fonction pour vérifier le statut des bots et des sites web
+  async function checkStatus() {
     try {
       const guild = client.guilds.cache.get(guildId); // Utiliser l'ID du serveur
       if (!guild) {
@@ -54,54 +65,91 @@ client.once('ready', () => {
       const members = await guild.members.fetch();
 
       // Créer la description combinée pour tous les bots
-      let description = '';
+      let botsDescription = '';
 
       bots.forEach(bot => {
         const botMember = members.get(bot.id);
         const status = botMember ? (botMember.presence ? botMember.presence.status : 'offline') : 'offline';
 
-        description += `**Nom du Bot**: ${bot.name}\n`;
-        description += `**ID du Bot**: ${bot.id}\n`;
-        description += `**Statut**: ${status === 'online' ? `${emojis.online} En ligne` : `${emojis.offline} Hors ligne`}\n`;
-        description += '\n';
+        botsDescription += `**Nom du Bot**: ${bot.name}\n`;
+        botsDescription += `**ID du Bot**: ${bot.id}\n`;
+        botsDescription += `**Statut**: ${status === 'online' ? `${emojis.online} En ligne` : `${emojis.offline} Hors ligne`}\n`;
+        botsDescription += '\n';
       });
+
+      // Vérifier le statut des sites web
+      let websiteStatuses = '';
+      for (const site of websites) {
+        let websiteStatus = 'Indisponible';
+        try {
+          const response = await axios.get(site.url);
+          if (response.status === 200) {
+            websiteStatus = `${emojis.online} En ligne`;
+          }
+        } catch (error) {
+          websiteStatus = `${emojis.offline} Hors ligne`;
+        }
+        websiteStatuses += `**Site**: ${site.name}\n**URL**: ${site.url}\n**Statut**: ${websiteStatus}\n\n`;
+      }
 
       // Créer l'embed avec tous les statuts
       const statusEmbed = new EmbedBuilder()
-        .setTitle('Statut des Bots')
-        .setDescription(description)
+        .setTitle('Statut des Bots et Sites Web')
+        .setDescription(`${botsDescription}\n\n${websiteStatuses}`)
         .addFields(
-          { name: 'Dernière mise à jour', value: getDiscordTimestamp() } // Met à jour le timestamp
+          { name: 'Dernière mise à jour', value: getDiscordTimestamp() }, // Met à jour le timestamp
+          { name: 'Uptime du Bot', value: getUptimeTimestamp() } // Affiche le temps depuis le démarrage du bot sous forme de timestamp
         )
         .setColor('Blue'); // Choisis une couleur qui te convient
 
-      // Créer un bouton avec un lien
-      const button = new ButtonBuilder()
-        .setLabel('My Code Here')
+      // Créer un bouton avec un lien vers le dépôt GitHub
+      const githubButton = new ButtonBuilder()
+        .setLabel('Visitez le site pour le code')
         .setStyle(ButtonStyle.Link)
         .setURL('https://github.com/kitbot14/status-bot');
 
-      // Créer une ligne d'action pour le bouton
-      const row = new ActionRowBuilder().addComponents(button);
+      // Créer un bouton avec un lien vers le site web
+      const websiteButton = new ButtonBuilder()
+        .setLabel('Visitez le site saturne')
+        .setStyle(ButtonStyle.Link)
+        .setURL('https://kitbot14.github.io/saturne-site'); // Met à jour l'URL du bouton si nécessaire
+              
+      const websiteButton = new ButtonBuilder()
+        .setLabel('Visitez le support')
+        .setStyle(ButtonStyle.Link)
+        .setURL('https://discord.gg/rV56PQXSdF'); // Met à jour l'URL du bouton si nécessaire
 
-      // Supprime l'ancien message s'il existe
+      // Créer une ligne d'action pour les boutons
+      const row = new ActionRowBuilder().addComponents(githubButton, websiteButton);
+
+      // Envoyer ou mettre à jour le message de statut
       if (statusMessage) {
-        await statusMessage.delete();
+        // Met à jour le message existant
+        await statusMessage.edit({ embeds: [statusEmbed], components: [row] });
+      } else {
+        // Envoie le nouveau message
+        statusMessage = await channel.send({ embeds: [statusEmbed], components: [row] });
       }
 
-      // Envoie le nouveau message
-      statusMessage = await channel.send({ embeds: [statusEmbed], components: [row] });
-
     } catch (error) {
-      console.error('Erreur lors de la vérification du statut des bots:', error);
+      console.error('Erreur lors de la vérification du statut des bots ou des sites:', error);
     }
   }
 
-  // Vérifie le statut toutes les 30 minutes (1800000 millisecondes)
-  setInterval(checkBotsStatus, 1800000);
+  // Vérifie le statut toutes les minutes (60000 millisecondes)
+  setInterval(checkStatus, 60000);
+
+  // Supprime et recrée le message toutes les heures (3600000 millisecondes)
+  setInterval(async () => {
+    if (statusMessage) {
+      await statusMessage.delete();
+      statusMessage = null; // Réinitialise le message pour qu'il soit recréé
+    }
+    await checkStatus(); // Vérifie et recrée le message
+  }, 3600000);
 
   // Effectue une première vérification dès que le bot est prêt
-  checkBotsStatus();
+  checkStatus();
 });
 
 client.login(token);
