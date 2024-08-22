@@ -5,7 +5,6 @@
     { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" },
     { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" }
   ],
-    # ps tu peux mettre infinit bot et site tu copie juste le code expl sa     { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" } ou sa     { "name": "nom_du_site", "url": "url_du_site_a_check" }
   "channelId": "ID_DU_SALON",
   "guildId": "ID_DU_SERVER",
   "token": "TOKEN_YOU_BOT",
