@@ -1,9 +1,9 @@
 {
 "bots": [
-    { "id": "1263581843975045254", "name": "Saturne Protect" },
-    { "id": "1267343664162803754", "name": "Saturne $B" }
+    { "id": "ID_DU_BOT_1", "name": "NOM_DU_BOT_1" },
+    { "id": "ID_DU_BOT_2", "name": "NOM_DU_BOT_2" }
   ],
-  "channelId": "1275521808384135284",
-  "guildId": "1270856142146240665",
-  "token": "MTI2NTc3MjM3MzU2MzQxMjU3MQ.Gi2Z33.CIX0LJbBnGvSsN_pP3e7pcYuUA7u9VaVCpq0OU"
+  "channelId": "ID_DU_SALON",
+  "guildId": "ID_DU_SERVER",
+  "token": "TOKEN_YOU_BOT"
 }
