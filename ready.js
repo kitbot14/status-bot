@@ -9,7 +9,7 @@ module.exports = (client) => {
       client.user.setPresence({
         activities: [
           {
-            name: 'Status Bot Saturne',
+            name: 'Status Bot',
             type: ActivityType.Streaming, // Utiliser ActivityType.Streaming pour v14
             url: 'https://twitch.tv/kityt69' // Remplace par une URL de streaming
           }
