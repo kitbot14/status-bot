@@ -1,10 +1,15 @@
 {
 "bots": [
-    { "id": "1263581843975045254", "name": "Saturne Protect" },
-    { "id": "1268358588926267485", "name": "Saturne Pub" },
-    { "id": "1267343664162803754", "name": "Saturne $B" }
+    { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" },
+    { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" },
+    { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" },
+    { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" }
   ],
+    //ps tu peux mettre infinit bot et site tu copie juste le code expl sa     { "id": "id_du_bot_a_regarder", "name": "nom_de_ton_bot" } ou sa     { "name": "nom_du_site", "url": "url_du_site_a_check" }
   "channelId": "ID_DU_SALON",
   "guildId": "ID_DU_SERVER",
-  "token": "TOKEN_YOU_BOT"
+  "token": "TOKEN_YOU_BOT",
+  "websites": [
+    { "name": "nom_du_site", "url": "url_du_site_a_check" }
+  ]
 }
