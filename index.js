@@ -84,19 +84,21 @@ client.once('ready', () => {
       // Créer une ligne d'action pour le bouton
       const row = new ActionRowBuilder().addComponents(button);
 
-      // Mettre à jour ou envoyer le message
+      // Supprime l'ancien message s'il existe
       if (statusMessage) {
-        await statusMessage.edit({ embeds: [statusEmbed], components: [row] });
-      } else {
-        statusMessage = await channel.send({ embeds: [statusEmbed], components: [row] });
+        await statusMessage.delete();
       }
+
+      // Envoie le nouveau message
+      statusMessage = await channel.send({ embeds: [statusEmbed], components: [row] });
+
     } catch (error) {
       console.error('Erreur lors de la vérification du statut des bots:', error);
     }
   }
 
-  // Vérifie le statut toutes les 60 secondes
-  setInterval(checkBotsStatus, 60000);
+  // Vérifie le statut toutes les 30 minutes (1800000 millisecondes)
+  setInterval(checkBotsStatus, 1800000);
 
   // Effectue une première vérification dès que le bot est prêt
   checkBotsStatus();
