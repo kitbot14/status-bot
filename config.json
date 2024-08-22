@@ -1,7 +1,8 @@
 {
 "bots": [
-    { "id": "ID_DU_BOT_1", "name": "NOM_DU_BOT_1" },
-    { "id": "ID_DU_BOT_2", "name": "NOM_DU_BOT_2" }
+    { "id": "1263581843975045254", "name": "Saturne Protect" },
+    { "id": "1268358588926267485", "name": "Saturne Pub" },
+    { "id": "1267343664162803754", "name": "Saturne $B" }
   ],
   "channelId": "ID_DU_SALON",
   "guildId": "ID_DU_SERVER",
