@@ -114,13 +114,13 @@ client.once('ready', () => {
         .setStyle(ButtonStyle.Link)
         .setURL('https://kitbot14.github.io/saturne-site'); // Met à jour l'URL du bouton si nécessaire
               
-      const websiteButton = new ButtonBuilder()
+      const supportButton = new ButtonBuilder()
         .setLabel('Visitez le support')
         .setStyle(ButtonStyle.Link)
         .setURL('https://discord.gg/rV56PQXSdF'); // Met à jour l'URL du bouton si nécessaire
 
       // Créer une ligne d'action pour les boutons
-      const row = new ActionRowBuilder().addComponents(githubButton, websiteButton);
+      const row = new ActionRowBuilder().addComponents(githubButton, websiteButton, supportButton);
 
       // Envoyer ou mettre à jour le message de statut
       if (statusMessage) {
