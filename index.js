@@ -38,9 +38,9 @@ function getUptimeTimestamp() {
 
 // Emoji pour les différents états
 const emojis = {
-  online: '<:ON:1276254078841786439>',
-  offline: '<:OFF:1276254076698361896>',
-  notFound: '<:NONTROUVER:1276254113134547107>'
+  online: '<:greendot:1276694773255634995>',
+  offline: '<:reddot:1276694697024163965>',
+  notFound: '<a:emoji_33:1276694807095545918>'
 };
 
 // Charger le module ready.js
@@ -72,7 +72,7 @@ client.once('ready', () => {
         const status = botMember ? (botMember.presence ? botMember.presence.status : 'offline') : 'offline';
 
         botsDescription += `**Nom du Bot**: ${bot.name}\n`;
-        botsDescription += `**ID du Bot**: ${bot.id}\n`;
+        botsDescription += `**ID du Bot**: <:emoji_16:1276695004836003962> ${bot.id}\n`;
         botsDescription += `**Statut**: ${status === 'online' ? `${emojis.online} En ligne` : `${emojis.offline} Hors ligne`}\n`;
         botsDescription += '\n';
       });
@@ -89,7 +89,7 @@ client.once('ready', () => {
         } catch (error) {
           websiteStatus = `${emojis.offline} Hors ligne`;
         }
-        websiteStatuses += `**Site**: ${site.name}\n**URL**: ${site.url}\n**Statut**: ${websiteStatus}\n\n`;
+        websiteStatuses += `**Site**: ${site.name}\n**URL**: <:web:1276694908639510660> ${site.url}\n**Statut**: ${websiteStatus}\n\n`;
       }
 
       // Créer l'embed avec tous les statuts
@@ -97,8 +97,9 @@ client.once('ready', () => {
         .setTitle('Statut des Bots et Sites Web')
         .setDescription(`${botsDescription}\n\n${websiteStatuses}`)
         .addFields(
-          { name: 'Dernière mise à jour', value: getDiscordTimestamp() }, // Met à jour le timestamp
-          { name: 'Uptime du Bot', value: getUptimeTimestamp() } // Affiche le temps depuis le démarrage du bot sous forme de timestamp
+          { name: 'Dernière mise à jour <a:login:1276695214538358806>', value: getDiscordTimestamp() }, // Met à jour le timestamp
+          { name: 'Uptime du Bot <:crvt:1275107806407561237>', value: getUptimeTimestamp() }, // Affiche le temps depuis le démarrage du bot sous forme de timestamp
+          { name: 'Ping du Bot 🏓', value: `${client.ws.ping}ms` } // Affiche le ping du bot
         )
         .setColor('Blue'); // Choisis une couleur qui te convient
 
