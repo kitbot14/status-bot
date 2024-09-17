@@ -10,5 +10,15 @@
   "token": "TOKEN_YOU_BOT",
   "websites": [
     { "name": "nom_du_site", "url": "url_du_site_a_check" }
-  ]
+  ],
+"emojis": {
+    "online": "<a:ongestions:1285652291604582490>",
+    "offline": "<a:off:1285652485188354188>",
+    "notFound": "<a:loading69:1285652301511393403>",
+    "web": "<:site:1285654364848918569>",
+    "botId": "<:id:1285654075156860990>",
+    "lastUpdate": "<a:emoji_33:1285652306506940501>",
+    "uptime": "<:start:1285652310625882123>",
+    "botemo": "<:Bot:1285654141129195541>"  
+  }
 }
